@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adicionar Tarefa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: white;
+            display: inline-block;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 300px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #mensagem {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+            color: green;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Adicionar Tarefa</h2>
+
+    <form id="form-tarefa" onsubmit="enviarTarefa(event)">
+        <label for="descricao">Descrição da Tarefa:</label>
+        <input type="text" id="descricao" name="descricao" placeholder="Digite a tarefa" required />
+        <button type="submit">Enviar</button>
+    </form>
+
+    <p id="mensagem"></p>
+
+    <a href="listar_tarefas.html">Ver lista de tarefas</a>
+
+    <script>
+
+    function enviarTarefa(event){
+      event.preventDefault()
+
+      let descricao = document.getElementById("descricao").value
+
+      let tarefa = {descricao}
+
+      fetch("/api/tarefas", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(tarefa)
+      })
+
+      .then(() => {
+        document.getElementById("mensagem").textContent = "Tarefa enviada com sucesso!"
+        document.getElementById("form-tarefa").reset()
+      })
+
+    }
+
+  </script>
+
+</body>
+</html>
+
+
+
+  

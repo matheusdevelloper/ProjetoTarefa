@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Tarefas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      margin: 0;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2d3748;
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    thead {
+      background-color: #009688;
+    }
+
+    thead th {
+      color: #fff;
+      padding: 16px;
+      font-size: 1rem;
+      text-align: left;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      color: #333;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f2f1;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 16px;
+      background-color: #009688;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #00796b;
+    }
+
+    .center-link {
+      text-align: center;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #e53935; /* vermelho suave */
+      font-size: 1.2rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button:hover {
+      background-color: #e5393522; /* vermelho com transparência */
+      color: #b71c1c;
+    }
+
+    /* Usando um ícone unicode de lixeira para deixar mais bonito */
+    button::before {
+      content: "🗑️";
+      font-size: 1.3rem;
+    }
+
+
+    
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+      <h2>📋 Lista de Tarefas</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaTarefas">
+          <!-- Tarefas adicionadas via JavaScript -->
+        </tbody>
+      </table>
+
+      <div class="center-link">
+        <a href="index.html">← Voltar para adicionar tarefa</a>
+      </div>
+  </div>
+
+
+
+  <script>
+    fetch("/api/tarefas")
+      .then(response => response.json())
+      .then(tarefas => {
+        
+        const tbody = document.getElementById("listaTarefas");
+
+        tarefas.forEach(tarefa => {
+
+          const tdAcao = document.createElement("td")
+          const botaoExcluir = document.createElement("button")
+          botaoExcluir.textContent = "Excluir"
+          const tr = document.createElement("tr");
+          const tdDescricao = document.createElement("td");
+          tdDescricao.textContent = tarefa.descricao;
+          tdDescricao.id = `${tarefa.id}`
+
+          tdAcao.appendChild(botaoExcluir)
+          tr.appendChild(tdDescricao);
+          tr.appendChild(tdAcao);
+          tbody.appendChild(tr);
+          
+          //Aqui apaga a tarefa desejada pelo o usuario
+          botaoExcluir.addEventListener("click", () => {
+            fetch(`api/tarefas/${tdDescricao.id}`, {
+               method:"DELETE"
+            })
+            
+            tr.remove()
+          })
+
+        });
+      });
+  </script>
+</body>
+</html>
